@@ -3,6 +3,7 @@ AmCharts graphs using Withings Body Metric Service API
 
 ### Todo
 
+* Cleanup html/js/php
 * wait for update of Paxx/withings-php
 * simplify the user check for inclusion of json
 * explain a bit how to start using this (withing api key and such)
