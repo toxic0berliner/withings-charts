@@ -1,0 +1,17 @@
+{
+    "name": "toxic0berliner/withings-amcharts",
+    "description": "AmCharts rendering using data provided by Withings API possibly combined with static json file",
+    "license" : "WTF",
+    "keywords" : ["withings", "wbs", "wbsapi", "wbsapi2", "laravel", "socialite", "socialiteprovider", "oauth1"],
+    "authors": [
+        {
+            "name": "toxic0berliner",
+            "email": "noone@nowhere.com",
+            "homepage": "https://github.com/toxic0berliner/"
+        }
+    ],
+    "require": {
+        "paxx/withings": ">=1.1.0"
+        },
+    "minimum-stability": "dev"
+}
