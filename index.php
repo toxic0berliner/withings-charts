@@ -8,6 +8,10 @@ use Carbon\Carbon;
 
 session_start();
 
+//Settings : 
+$userIdjson = 0000000; //this is your withings user id for which we will include some static json data
+$jsonStartDate='2016-07-13 09'; // this is the date at which json data ends and before which withings data gets ignored. Format: 'Y-m-d H'.
+
 //a touch of colors
 $darkorange="#cc6600";
 $orange=	 "#ff6600";
@@ -85,8 +89,8 @@ if (array_key_exists('forcerefresh',$_GET) || !isset($_SESSION['lastfetch'])) {
     }
 
     //if the user connected is myself, then fill in the old data from manual entry using json
-    if ($user->getId()=="XXXXXXX") {
-    	$startdate=Carbon::createFromFormat('Y-m-d H', '2016-07-13 09');
+    if ($user->getId()==$userIdjson) {
+    	$startdate=Carbon::createFromFormat('Y-m-d H', $jsonStartDate);
     }
 
     // Building the set of measures
@@ -139,9 +143,9 @@ include 'html-part1.php';
 // at this point, we only need to fill in the dataProvider before including the next html part.
 
 //if the user connected is myself, then fill in the old data from manual entry using json
-if ($_SESSION['userid']=="XXXXXXX") {
+if ($_SESSION['userid']==$userIdjson) {
 	echo file_get_contents('data-google.json');
-	$startdate=Carbon::createFromFormat('Y-m-d H', '2016-07-13 09');
+	$startdate=Carbon::createFromFormat('Y-m-d H', $jsonStartDate);
 }
 
 foreach($measures as $measure) {
