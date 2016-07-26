@@ -1,5 +1,5 @@
 <?php
-require_once './vendor/autoload.php';
+require_once './php-withings/vendor/autoload.php';
 
 use Paxx\Withings\Api as WithingsApi;
 use Paxx\Withings\Server\Withings as WithingsAuth;
@@ -29,7 +29,7 @@ $measures=array();
 $lastfetch=null;
 $datarefreshed=false;
 
-// See if we need to refresh our dataset :
+// See if we were requested to refresh our data or obviously have to
 if (array_key_exists('forcerefresh',$_GET) || !isset($_SESSION['lastfetch'])) {
 
   $datarefreshed=true;
@@ -114,14 +114,23 @@ if (array_key_exists('forcerefresh',$_GET) || !isset($_SESSION['lastfetch'])) {
     unset($_SESSION['oauth_verifier']);
     unset($_SESSION['userid']);
     header('Location: ./forcerefresh.php');
+    exit;
   }
 
 } else {
-  //here we don't need to refresh our data set.
+  //here we have not been requested to refresh our data set.
   // just load it from session:
   $measures = unserialize($_SESSION['measures']);
   $lastfetch = unserialize($_SESSION['lastfetch']);
   $usersize = unserialize($_SESSION['usersize']);
+  
+  //check if data is not too old : 
+  $threshold = Carbon::now()->subHours(1);
+  if ($lastfetch->lt($threshold)) {
+  	//our data is too old, force refreshing : 
+  	header('Location: ./forcerefresh.php');
+  	exit;
+  }
 }
 
 
@@ -137,25 +146,21 @@ if ($_SESSION['userid']=="XXXXXXX") {
 
 foreach($measures as $measure) {
     if ($measure->getWeight()) {
-    	//printf('{"lineColor": "%s", "TimeStamp": "%s", "Weight": "%s", "Fat": "%s", "Water": "%s", "Muscle": "%s", "BMI": "%s"},', $fillColor, $row[0], $row[1], $row[2], $row[3], $row[4], $row[5]);
-		if ($measure->getMuscleRatio()>0) {
-			printf('{"TimeStamp": "%s", "Weight": "%s", "Fat": "%s", "Water": "%s", "Muscle": "%s" ,"BMI": "%s", "Bone": "%s"},%s', $measure->getCreatedAt(), round($measure->getWeight(),1), round($measure->getFatRatio(),2), round($measure->getHydrationRatio(),2), round($measure->getMuscleRatio(),2),round($measure->getWeight()/($usersize*$usersize),1),round($measure->getBoneRatio(),2),"\n");
-		} else {
-			printf('{"TimeStamp": "%s", "Weight": "%s", "Fat": "%s" ,"BMI": "%s"},%s', $measure->getCreatedAt(), round($measure->getWeight(),1), round($measure->getFatRatio(),2),round($measure->getWeight()/($usersize*$usersize),1),"\n");
+    	printf('{"TimeStamp": "%s", "Weight": "%s", "BMI": "%s",',$measure->getCreatedAt(), round($measure->getWeight(),1), round($measure->getWeight()/($usersize*$usersize),1));
+		if ($measure->getFatRatio()>0) {
+			printf(' "Fat": "%s",', round($measure->getFatRatio(),2));
 		}
-		/*echo $measure->getCreatedAt() . ': <br>';
-	    echo 'In metric: ' . $measure->getWeight() . ' kg<br>';
-	    echo '<strong>Fat Ratio : '. $measure->getFatRatio() .'</strong><br/>';
-	    echo '<strong>Fat Free Ratio : '. $measure->getFatFreeRatio() .'</strong><br/>';
-	    echo '<strong>Bone Ratio : '. $measure->getBoneRatio() .'</strong><br/>';
-	    echo '<strong>Muscle Ratio : '. $measure->getMuscleRatio() .'</strong><br/>';
-	    echo '<strong>Hydration Ratio : '. $measure->getHydrationRatio() .'</strong><br/>';*/
+		if ($measure->getHydrationRatio()>0) {
+			printf(' "Water": "%s",', round($measure->getHydrationRatio(),2));
+		}
+		if ($measure->getMuscleRatio()>0) {
+			printf(' "Muscle": "%s",', round($measure->getMuscleRatio(),2));
+		}
+		if ($measure->getBoneRatio()>0) {
+			printf(' "Bone": "%s",', round($measure->getBoneRatio(),2));
+		}
+		printf(' },%s',"\n");
     }
-
-    /*echo '<pre>';
-    print_r($measure);
-    echo '</pre>';
-    echo '<hr>';*/
 }
 
 include 'html-part2.php';
