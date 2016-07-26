@@ -1,5 +1,5 @@
 <?php
-require_once './php-withings/vendor/autoload.php';
+require_once './vendor/autoload.php';
 
 use Paxx\Withings\Api as WithingsApi;
 use Paxx\Withings\Server\Withings as WithingsAuth;
