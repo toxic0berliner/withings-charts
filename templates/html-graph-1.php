@@ -1,15 +1,7 @@
-<?php 
-/* BEGIN HTML */
-?><!DOCTYPE html>
-<html>
-	<head>
-		<title>Weight</title>
-		<meta name="description" content="weight, bmi and partial weights over time" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<!-- amCharts javascript sources -->
-		<script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<!--GRAPH BEGIN -->
+   		<script type="text/javascript" src="https://www.amcharts.com/lib/3/amcharts.js"></script>
 		<script type="text/javascript" src="https://www.amcharts.com/lib/3/serial.js"></script>
-		<script src="./responsive.min.js" type="text/javascript"></script>
+		<script src="./resources/responsive.min.js" type="text/javascript"></script>
 		<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script>
 function resizeElementHeight(element) {
@@ -123,8 +115,8 @@ $(window).resize(function(){
 							"useLineColorForBulletBorder": true,
 							//"balloonText": "<span style='font-size:"+balloonTextFontSize+"px;'>[[value]] kg</span>",
 							"useNegativeColorIfDown": false,
-							"negativeLineColor": "<?=$darkorange?>",
-							"lineColor": "<?=$orange?>",
+							"negativeLineColor": "#cc6600",
+							"lineColor": "#ff6600",
 							//"fillColorsField": "lineColor",
 							"fillAlphas": 0.3,
 							"negativeFillColors":"#2bc405",
@@ -144,8 +136,8 @@ $(window).resize(function(){
 							"lineThickness": lineThickness,
 							"useLineColorForBulletBorder": true,
 							//"balloonText": "<span style='font-size:18px;'>[[value]] kg</span>",
-							"negativeLineColor": "<?=$darkyellow?>",
-							"lineColor": "<?=$yellow?>",
+							"negativeLineColor": "#b09303",
+							"lineColor": "#fcd202",
 							//"fillColorsField": "lineColor",
 							"fillAlphas": 0,
 							"negativeFillColors":"#2bc405",
@@ -166,8 +158,8 @@ $(window).resize(function(){
 							"lineThickness": lineThickness,
 							"useLineColorForBulletBorder": true,
 							//"balloonText": "<span style='font-size:18px;'>[[value]] kg</span>",
-							"negativeLineColor": "<?=$darkblue?>",
-							"lineColor": "<?=$blue?>",
+							"negativeLineColor": "#0f1d71",
+							"lineColor": "#6074ea",
 							//"fillColorsField": "lineColor",
 							"fillAlphas": 0,
 							"negativeFillColors":"#2bc405",
@@ -186,8 +178,8 @@ $(window).resize(function(){
 							"lineThickness": lineThickness,
 							"useLineColorForBulletBorder": true,
 							//"balloonText": "<span style='font-size:18px;'>[[value]] kg</span>",
-							"negativeLineColor": "<?=$darkgreen?>",
-							"lineColor": "<?=$green?>",
+							"negativeLineColor": "#235412",
+							"lineColor": "#67d642",
 							//"fillColorsField": "lineColor",
 							"fillAlphas": 0,
 							"negativeFillColors":"#2bc405",
@@ -208,6 +200,7 @@ $(window).resize(function(){
 							//"balloonText": "<span style='font-size:18px;'>[[value]] kg.m<sup>-2</sup></span>",
 							"precision": 1,
 							"negativeLineColor": "black",
+							"lineColor": "#2a0cd0",
 							//"fillColorsField": "lineColor",
 							"fillAlphas": 0,
 							"negativeFillColors":"#2bc405",
@@ -226,8 +219,8 @@ $(window).resize(function(){
 							"lineThickness": lineThickness,
 							"useLineColorForBulletBorder": true,
 							//"balloonText": "<span style='font-size:18px;'>[[value]] kg</span>",
-							"negativeLineColor": "<?=$darkprune?>",
-							"lineColor": "<?=$prune?>",
+							"negativeLineColor": "#660080",
+							"lineColor": "#cc00ff",
 							//"fillColorsField": "lineColor",
 							"fillAlphas": 0,
 							"negativeFillColors":"grey",
@@ -271,9 +264,10 @@ $(window).resize(function(){
 						//"fontSize": balloonFontSize,
 					},
 					"legend": {
-						"enabled": true,
+						"enabled": false,
 						"useGraphSettings": true,
 						//"fontSize": legendFontSize,
 						//"spacing": 0,
 					},
-					"dataProvider": [
+					"dataProvider": [  
+

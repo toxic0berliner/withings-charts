@@ -8,9 +8,7 @@ use Carbon\Carbon;
 
 session_start();
 
-//Settings : 
-$userIdjson = 0000000; //this is your withings user id for which we will include some static json data
-$jsonStartDate='2016-07-13 09'; // this is the date at which json data ends and before which withings data gets ignored. Format: 'Y-m-d H'.
+require_once "config.php";
 
 //a touch of colors
 $darkorange="#cc6600";
@@ -32,31 +30,38 @@ $usersize=null;
 $measures=array();
 $lastfetch=null;
 $datarefreshed=false;
+$userFirstName="";
 
 // See if we were requested to refresh our data or obviously have to
 if (array_key_exists('forcerefresh',$_GET) || !isset($_SESSION['lastfetch'])) {
 
-  $datarefreshed=true;
+	$datarefreshed=true;
 
-  try {
-
-    $config = array(
-        'identifier' => '<get it from withings>',
-        'secret' => '<get it from withings>',
-        'callback_uri' => 'https://your/path/here/callback.php'
-    );
-
-    $server = new WithingsAuth($config);
-
-    if (isset($_SESSION['oauth_token'])) {
-        // Step 2
-
-        // Retrieve the temporary credentials from step 2
-        $temporaryCredentials = unserialize($_SESSION['temporary_credentials']);
-
-        // Retrieve token credentials - you can save these for permanent usage
-        $tokenCredentials = $server->getTokenCredentials($temporaryCredentials, $_SESSION['oauth_token'], $_SESSION['oauth_verifier']);
-
+	try {
+  	
+	$withingsconfig = array(
+		'identifier' => $config["identifier"],
+		'secret' => $config["secret"],
+		'callback_uri' => $config["callback_uri"]
+	);
+	
+	$server = new WithingsAuth($withingsconfig);
+	
+	if (isset($_SESSION['oauth_token'])) {
+		if (isset($_SESSION['token_credentials'])) {
+			$tokenCredentials = unserialize($_SESSION['token_credentials']);
+		} else {
+			// Step 2
+			
+			// Retrieve the temporary credentials from step 2
+			$temporaryCredentials = unserialize($_SESSION['temporary_credentials']);
+			
+			// Retrieve token credentials - you can save these for permanent usage
+			$tokenCredentials = $server->getTokenCredentials($temporaryCredentials, $_SESSION['oauth_token'], $_SESSION['oauth_verifier']);
+			// Store the credentials in the session.
+			$_SESSION['token_credentials'] = serialize($tokenCredentials);
+    	}
+		
         // Also save the userId
         $userId = $_SESSION['userid'];
     } else {
@@ -72,13 +77,13 @@ if (array_key_exists('forcerefresh',$_GET) || !isset($_SESSION['lastfetch'])) {
         $server->authorize($temporaryCredentials);
     }
 
-    $config = $config + array(
+    $withingsconfig = $withingsconfig + array(
         'access_token' => $tokenCredentials->getIdentifier(),
         'token_secret' => $tokenCredentials->getSecret(),
         'user_id'      => $userId
     );
 
-    $api = new WithingsApi($config);
+    $api = new WithingsApi($withingsconfig);
     $user = $api->getUser();
 
     //finding out the user's size :
@@ -89,9 +94,10 @@ if (array_key_exists('forcerefresh',$_GET) || !isset($_SESSION['lastfetch'])) {
     }
 
     //if the user connected is myself, then fill in the old data from manual entry using json
-    if ($user->getId()==$userIdjson) {
-    	$startdate=Carbon::createFromFormat('Y-m-d H', $jsonStartDate);
+    if ($user->getId()==$config["userIdJson"]) {
+    	$startdate=Carbon::createFromFormat($config["jsonLastDateFormat"], $config["jsonLastDate"]);
     }
+	$userFirstName = $user->getFirstName();
 
     // Building the set of measures
     /**
@@ -112,6 +118,7 @@ if (array_key_exists('forcerefresh',$_GET) || !isset($_SESSION['lastfetch'])) {
     $lastfetch = Carbon::now();
     $_SESSION['lastfetch']=serialize($lastfetch);
     $_SESSION['usersize']=serialize($usersize);
+    $_SESSION['userFirstName']=$userFirstName;
   } catch (Exception $e) {
     // something went wrong, most probably in oauth. So we clean oAuth and retry :
     unset($_SESSION['oauth_token']);
@@ -127,9 +134,10 @@ if (array_key_exists('forcerefresh',$_GET) || !isset($_SESSION['lastfetch'])) {
   $measures = unserialize($_SESSION['measures']);
   $lastfetch = unserialize($_SESSION['lastfetch']);
   $usersize = unserialize($_SESSION['usersize']);
+  $userFirstName = $_SESSION['userFirstName'];
   
   //check if data is not too old : 
-  $threshold = Carbon::now()->subHours(1);
+  $threshold = Carbon::now()->subHours($config["refreshDelay"]);
   if ($lastfetch->lt($threshold)) {
   	//our data is too old, force refreshing : 
   	header('Location: ./forcerefresh.php');
@@ -138,14 +146,15 @@ if (array_key_exists('forcerefresh',$_GET) || !isset($_SESSION['lastfetch'])) {
 }
 
 
-include 'html-part1.php';
+include 'templates/html-part1.php';
+include 'templates/html-graph-1.php';
 
 // at this point, we only need to fill in the dataProvider before including the next html part.
 
 //if the user connected is myself, then fill in the old data from manual entry using json
-if ($_SESSION['userid']==$userIdjson) {
-	echo file_get_contents('data-google.json');
-	$startdate=Carbon::createFromFormat('Y-m-d H', $jsonStartDate);
+if ($_SESSION['userid']==$config["userIdJson"]) {
+	echo file_get_contents($config["dataJson"]);
+	$startdate=Carbon::createFromFormat('Y-m-d H', '2016-07-13 09');
 }
 
 foreach($measures as $measure) {
@@ -167,4 +176,5 @@ foreach($measures as $measure) {
     }
 }
 
-include 'html-part2.php';
+include 'templates/html-graph-2.php';
+include 'templates/html-part2.php';

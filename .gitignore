@@ -1,4 +1,6 @@
 /vendor
 composer.phar
 composer.lock
+config.php
+/resources/data.json
 .DS_Store

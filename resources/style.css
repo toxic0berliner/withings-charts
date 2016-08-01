@@ -1,0 +1,93 @@
+/*tweaking bootstrap a bit*/
+.dropdown-menu .divider {margin: 0px 15px;}
+.navbar-nav .open .dropdown-menu .dropdown-header, .navbar-nav .open .dropdown-menu>li>a {padding:5px 15px 5px 45px;}
+.navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:focus, .navbar-default .navbar-nav>.open>a:hover { color:white; }
+.navbar-default .navbar-nav>.active>a,.navbar-default .navbar-nav>.open>a {
+    background-image: -webkit-linear-gradient(top,#5897b7 0,#77bbdb 100%);
+    background-image: -o-linear-gradient(top,#5897b7 0,#77bbdb 100%);
+    background-image: -webkit-gradient(linear,left top,left bottom,from(#5897b7),to(#77bbdb));
+    background-image: linear-gradient(to bottom,#5897b7 0,#77bbdb 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffdbdbdb', endColorstr='#ffe2e2e2', GradientType=0);
+    color:white;
+}
+
+/* Decrease navbar height (http://stackoverflow.com/a/18602076) */
+.navbar-nav > li > a, .navbar-brand {
+	padding-top:4px !important; 
+	padding-bottom:0 !important;
+	height: 28px;
+}
+.navbar {
+	min-height:28px !important;
+	margin-bottom:0px !important;
+}
+
+/*@TODO: add the rules I modified in the theme for to change the grey into a blue color for open items in the menu */
+
+
+.optionselected {
+	background-image: linear-gradient(to bottom,#dbdbdb 0,#e2e2e2 100%);
+	/*background-image: linear-gradient(to bottom,#5897b7 0,#77bbdb 100%);*/
+	/*color:white !important;*/
+}
+.optionselected::after {
+	content: " (on)";
+}
+#menubutton {
+	margin-left:10px;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	border-width: 0px;
+	padding-top: 7px;
+	padding-bottom: 7px;
+}
+
+#fullscreentoggle {
+	margin-left:15px;
+	margin-right:0px;
+	margin-bottom: 0px;
+	margin-top: 0px;
+	border-width: 0px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	float:right;
+}
+#fullscreentoggle img {
+	height:24px;
+	margin:0;
+}
+
+#forcerefresh #datarefreshed {
+	height: 10px;
+	margin: 0;
+	margin-left: -21px;
+}
+
+#forcerefresh {
+	float:right;
+}
+
+#forcerefresh img {
+	height:24px;
+	margin:0;
+}
+
+.sublevel {
+	padding-left:12px;
+}
+
+.legendinmenu {
+	width: 40px !important;
+	height: 2px !important;
+	display: inline-block;
+	margin-bottom: 0.2em;
+	margin-right: 0.8em;
+}
+
+.menuicon {
+	padding:4px;
+}
+
+.datarefreshed {
+	color:green;
+}
