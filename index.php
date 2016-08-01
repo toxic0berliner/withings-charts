@@ -154,7 +154,6 @@ include 'templates/html-graph-1.php';
 //if the user connected is myself, then fill in the old data from manual entry using json
 if ($_SESSION['userid']==$config["userIdJson"]) {
 	echo file_get_contents($config["dataJson"]);
-	$startdate=Carbon::createFromFormat('Y-m-d H', '2016-07-13 09');
 }
 
 foreach($measures as $measure) {

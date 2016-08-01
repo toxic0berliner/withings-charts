@@ -23,7 +23,7 @@ You're all set !  Browse to the page on your server and enjoy !
 
 ### Todo
 
-* Cleanup html/js/php
+* Cleanup html/js/php (start by removing som global vars like the unused colors...)
 
 ### Note
 This is only a quick and dirty hack, I'm mostly tring out my githib account...
